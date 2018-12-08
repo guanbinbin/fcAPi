@@ -6,6 +6,9 @@ use think\Request;
 use think\Db;
 
 // http://localhost/tp5/index.php/user/User/addUser
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Headers: content-type');
+
 
 class Login extends Controller{   
 	public function login(){
@@ -14,8 +17,8 @@ class Login extends Controller{
          1. userId or name 
          2. password
          return  
-         { code: 1, msg: 'login success', status: true}
-         { code: 0, msg: 'login fail', status: false}
+         { code: 200, msg: 'login success', status: true}
+         { code: -1, msg: 'login fail', status: false}
       */
 
         $request = Request::instance();
@@ -23,38 +26,20 @@ class Login extends Controller{
         $name = $request->param('name');
         $pwd =  $request->param('pwd');
 
-        // $data=Db::table('userInfo')->select();
+        if( $name && $pwd) {
+           $res=Db::name('user')->where('name',$name)->where('pwd',$pwd)->find();
+           $data = array(
+                 'code' => 200, 
+                 'success'=> true,
+                 'msg'=>'用户登录成功',
+                 'data'=> $res
+            );
+        }else {
+            $data = array('code' => -1, 'success'=> false,'msg'=>'登录失败,请重新核对用户名和密码');
+        }
 
-        // $response = "";
-        // for($i= 0; $i< count($data); $i++) {
-        //   if($data[$i].name == $name && $data[$i].pwd== $pwd){
-        //     $response = { 
-        //       "code": 1, 
-        //       "msg": '登录成功！',
-        //       "data": {
-        //           "id": 1,
-        //           "name": "李强",
-        //           "pwd": "123456",
-        //           "phone": "15255575890",
-        //           "qq": "1234321",
-        //           "date": "2018-12-01",
-        //           "type": 1
-        //       }
-        //       "status": false
-        //     };
-        //     break;
-        //   }else {
-        //     $response = { 
-        //       code: 0, 
-        //       msg: '用户名或者密码错误！',
-        //       status: false
-        //     }
-        //   }
-        // }
-
-        return json($name);
-        
-	}
+        return json($data);
+    }
     
 }
 
