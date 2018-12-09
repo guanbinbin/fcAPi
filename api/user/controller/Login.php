@@ -28,12 +28,17 @@ class Login extends Controller{
 
         if( $name && $pwd) {
            $res=Db::name('user')->where('name',$name)->where('pwd',$pwd)->find();
-           $data = array(
-                 'code' => 200, 
-                 'success'=> true,
-                 'msg'=>'用户登录成功',
-                 'data'=> $res
-            );
+           if(!empty($res)) {
+                $data = array(
+                     'code' => 200, 
+                     'success'=> true,
+                     'msg'=>'用户登录成功',
+                     'data'=> $res
+                );
+            }else {
+                $data = array('code' => 0, 'success'=> false,'msg'=>'用户名或者密码错误！');
+            }
+           
         }else {
             $data = array('code' => -1, 'success'=> false,'msg'=>'登录失败,请重新核对用户名和密码');
         }

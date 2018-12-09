@@ -6,10 +6,9 @@ use think\Request;
 use think\Db;
 
 
-// http://localhost/tp5/index.php/user/User/addUser
 header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Headers: x-requested-with,content-type');
-header('Access-Control-Allow-Methods: OPTIONS,POST,GET');
+// header('Access-Control-Allow-Headers: x-requested-with,content-type');
+// header('Access-Control-Allow-Methods: OPTIONS,POST,GET');
 
 class User extends Controller{   
     public function getUserList()
@@ -77,9 +76,68 @@ class User extends Controller{
 				'success'=>false,
 				'msg'=>'用户创建失败');
 		}
+        return json($res);
+    }
 
+    public function updateUser(){
+    }
+
+    public function filterUser(){
+    	/*
+    	*根据用户类型： type筛选用户
+    	*/ 
+    	$request = Request::instance();
+        $type =  $request->param('type');
+
+        if($type == 0 ){
+          $data=Db::name('user')->select();
+        }else {
+          $data=Db::name('user')->where('type',$type)->select();
+        }	
+
+    	
+    	if(isset($data) && count($data)){
+    		$res=Array('code'=>200,
+    			'success' => true,
+    			'msg'=>'成功获取用户列表',
+    			'data'=>$data
+    		);
+    	}else {
+    		$res=Array('code'=>-1,
+    			'success' => true,
+    			'msg'=>'用户为空',
+    			'data'=>0
+    		);
+    	}
         return json($res);
     }
     
-    
+    public function searchUser(){
+      /*
+      * 用户类型： $type
+      * 模糊查询条件： $condition
+      */ 
+      $request = Request::instance();
+      $type =  $request->param('type');
+      $condition =  $request->param('condition');
+      $query = "1";
+
+      $data = Db::name('user')->where('id|name|qq|phone|date','like',1)->select();
+
+      if(isset($data) && count($data)){
+    		$res=Array('code'=>200,
+    			'success' => true,
+    			'msg'=>'成功获取用户列表',
+    			'data'=>$data
+    		);
+      }else {
+    		$res=Array('code'=>-1,
+    			'success' => true,
+    			'msg'=>'用户为空',
+    			'data'=>0
+    		);
+      };
+
+      return json($data);
+    } 
 }
