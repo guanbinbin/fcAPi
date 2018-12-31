@@ -6,9 +6,12 @@ use think\Request;
 use think\Db;
 
 
+
+header("Access-Control-Allow-Origin: *");
 header('Access-Control-Allow-Origin: *');
-// header('Access-Control-Allow-Headers: x-requested-with,content-type');
-// header('Access-Control-Allow-Methods: OPTIONS,POST,GET');
+header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+header('Access-Control-Allow-Methods: GET, POST, PUT');
+
 
 class User extends Controller{   
     public function getUserList()
@@ -18,17 +21,74 @@ class User extends Controller{
     		$res=Array('code'=>200,
     			'success' => true,
     			'msg'=>'获取到用户列表',
+                'number'=> count($data),
     			'data'=>$data
     		);
     	}else {
     		$res=Array('code'=>-1,
     			'success' => true,
     			'msg'=>'用户为空',
+                'number' => 0,
     			'data'=>0
     		);
     	}
         return json($res);
     }
+
+    /*
+    *  查询用户
+    * params
+    * id: array
+    * type: default is null or 0
+    * keywords: default is ''
+    * pageIndex: default is null or 0 
+    * pageSize: default is 20 
+    */ 
+    public function queryUser(){
+
+        // $a=array("red","green");
+        // array_push($a,"blue","yellow");
+        // print_r($a);
+
+
+        $request = Request::instance();
+        $id = $request->param('id');
+        $type =  $request->param('type');
+        $keyword =  $request->param('keyword');
+        $pageIndex = $request->param('pageIndex');
+        $pageSize =  $request->param('pageSize');
+
+        $sql = array();
+        if(isset($id) && !empty($id)) {
+           array_push($sql,array('id'=>$id));
+        };
+
+        if(isset($type) && !empty($type)) {
+           array_push($sql,array('type'=>$type));
+        };
+        if(isset($keyword) && !empty($keyword)) {
+           array_push($sql,array('keyword'=>$keyword));
+        };
+
+        if(isset($pageIndex) && !empty($pageIndex)) {
+           array_push($sql,array('pageIndex'=>$pageIndex));
+        }else {
+          array_push($sql,array('pageIndex'=>1));
+        };
+
+        if(isset($pageSize) && !empty($pageSize)) {
+           array_push($sql,array('pageSize'=>$pageSize));
+        }else {
+            array_push($sql,array('pageSize'=>10));
+        };
+
+        print_r($sql);
+
+
+
+
+    }
+
 
     /*
     * 添加新用户
