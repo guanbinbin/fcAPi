@@ -52,6 +52,4 @@ header('Access-Control-Allow-Headers: content-type');
  	}
  }
 
-
-
 ?>
