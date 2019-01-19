@@ -50,6 +50,40 @@ header('Access-Control-Allow-Headers: content-type');
     	}
         return json($res);
  	}
+
+    public function queryClient(){
+        $request = Request::instance();
+
+        $client['user_id'] = $request->param('user_id');
+        $getKeywords['keywords'] = $request->param('keywords');
+  
+        if(isset($getKeywords['keywords'])) {
+            $client['phone'] = ['like',$getKeywords['keywords'].'%'];
+        };
+       
+        if(empty($client)) {
+           $data = Db::name('client')->select();
+        }else {
+           $data = Db::name('client')->where($client)->select();
+        };
+        if(isset($data) && count($data)){
+            $res=Array('code'=>200,
+                'success' => true,
+                'msg'=>'获取到用户列表',
+                'data'=>$data
+            );
+        }else {
+            $res=Array('code'=>-1,
+                'success' => true,
+                'msg'=>'用户为空',
+                'data'=>0
+            );
+        }
+
+        
+        return json($res);
+    }
+
  }
 
 ?>
