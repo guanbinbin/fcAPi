@@ -14,11 +14,25 @@ header('Access-Control-Allow-Headers: content-type');
  	*/ 
  	public function getClientList(){
  		$data=Db::name('client')->select();
-    	if(isset($data) && count($data)){
+
+        //处理客户归属人
+        $list = [];
+        $users = Db::name('user')->select();
+        for($i=0; $i<count($data); $i++) {
+          for($j=0; $j<count($users); $j++) {
+            if($data[$i]['user_id'] == $users[$j]['user_id']) {
+                $item = Array('client_id'=>$data[$i]['client_id'],'name'=>$data[$i]['name'],'phone'=>$data[$i]['phone'],'address'=>$data[$i]['address'],'loupan'=>$data[$i]['loupan'],'huxing'=>$data[$i]['huxing'],'price'=>$data[$i]['price'],'mianji'=>$data[$i]['mianji'],'belonger'=>$users[$j]['name'],'user_id'=>$users[$j]['user_id'],'loupan_type'=>$data[$i]['loupan_type'],'is_active'=>$data[$i]['is_active']);
+                array_push($list, $item);
+            }
+          }
+        }
+
+
+    	if(isset($list) && count($list)){
     		$res=Array('code'=>200,
     			'success' => true,
     			'msg'=>'获取到用户列表',
-    			'data'=>$data
+    			'data'=>$list
     		);
     	}else {
     		$res=Array('code'=>-1,
@@ -66,11 +80,28 @@ header('Access-Control-Allow-Headers: content-type');
         }else {
            $data = Db::name('client')->where($client)->select();
         };
-        if(isset($data) && count($data)){
+
+
+        //处理客户归属人
+        $list = [];
+        $users = Db::name('user')->select();
+        for($i=0; $i<count($data); $i++) {
+          for($j=0; $j<count($users); $j++) {
+            if($data[$i]['user_id'] == $users[$j]['user_id']) {
+                $item = Array('client_id'=>$data[$i]['client_id'],'name'=>$data[$i]['name'],'phone'=>$data[$i]['phone'],'address'=>$data[$i]['address'],'loupan'=>$data[$i]['loupan'],'huxing'=>$data[$i]['huxing'],'price'=>$data[$i]['price'],'mianji'=>$data[$i]['mianji'],'belonger'=>$users[$j]['name'],'user_id'=>$users[$j]['user_id'],'loupan_type'=>$data[$i]['loupan_type'],'is_active'=>$data[$i]['is_active']);
+                array_push($list, $item);
+            }
+          }
+        }
+
+
+
+
+        if(isset($list) && count($list)){
             $res=Array('code'=>200,
                 'success' => true,
                 'msg'=>'获取到用户列表',
-                'data'=>$data
+                'data'=>$list
             );
         }else {
             $res=Array('code'=>-1,

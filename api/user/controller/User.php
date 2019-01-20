@@ -256,6 +256,49 @@ class User extends Controller{
             $data = Array("code"=>0,"msg"=>"删除失败！","data"=>0);
         }
         return json($data);
+    }
 
+    public function getCircleUsers(){
+        $request = Request::instance();
+        $users = Db::name('user')->select();
+
+        $superAdmin = 0;
+        $admin = 0;
+        $person = 0;
+
+        for($i=0; $i<count($users); $i++) {
+            if($users[$i]['type'] == 1) {
+              $superAdmin += 1;
+            };
+            if($users[$i]['type'] == 2) {
+              $admin += 1;
+            };
+            if($users[$i]['type'] == 3) {
+              $person += 1;
+            };
+        };
+
+        $list = [];
+        array_push($list, array('value'=>$superAdmin,'name'=>'超级管理员'));
+        array_push($list, array('value'=>$admin,'name'=>'普通管理员'));
+        array_push($list, array('value'=>$person,'name'=>'普通用户'));
+
+
+        if(isset($list) && count($list)){
+            $res=Array('code'=>200,
+                'success' => true,
+                'msg'=>'获取到用户列表',
+                'data'=>$list
+            );
+        }else {
+            $res=Array('code'=>-1,
+                'success' => true,
+                'msg'=>'用户为空',
+                'data'=>0
+            );
+        }
+
+        return json($res);
     }
 }
+
