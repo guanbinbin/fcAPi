@@ -115,6 +115,133 @@ header('Access-Control-Allow-Headers: content-type');
         return json($res);
     }
 
+    /*
+    * 获取所有地区
+    */ 
+    public function getArea(){
+        $data=Db::name('area')->select();
+
+        $request = Request::instance();
+
+
+        if(isset($data) && count($data)){
+            $res=Array('code'=>200,
+                'success' => true,
+                'msg'=>'获取到用户列表',
+                'data'=>$data
+            );
+        }else {
+            $res=Array('code'=>-1,
+                'success' => true,
+                'msg'=>'用户为空',
+                'data'=>0
+            );
+        }
+        return json($res);
+    }
+
+    public function addClient(){
+        $request = Request::instance();
+
+        $name = $request->param('name');
+        $phone =  $request->param('phone');
+        $user_id =  $request->param('user_id');
+        $mail=  $request->param('mail');
+        $other_contact = $request->param('other_contact');
+        $address =  $request->param('address');
+        $loupan = $request->param('loupan');
+        $price =  $request->param('price');
+        $mianji=  $request->param('mianji');
+        $huxing = $request->param('huxing');
+        $house_floor =  $request->param('house_floor');
+        $buy_for=  $request->param('buy_for');
+        $beizhu = $request->param('beizhu');
+        $loupan_type =  $request->param('loupan_type');
+
+        if(empty($name) || empty($phone)) {
+            $res=Array('code'=>0,
+                'success' => 0,
+                'msg'=>'请将姓名和电话填写完整',
+                'data'=>0
+            );
+        }else {
+            $clientInfo = [];
+            if(!empty($user_id)) {
+                $clientInfo['user_id'] = $user_id;
+            };
+            if(!empty($mail)) {
+              $clientInfo['mail'] = $mail;
+            };
+            if(!empty($other_contact)) {
+                $clientInfo['other_contact'] = $other_contact;
+            };
+            if(!empty($address)) {
+              $clientInfo['address'] = $address;
+            };
+            if(!empty($loupan)) {
+                $clientInfo['loupan'] = $loupan;
+            };
+            if(!empty($price)) {
+              $clientInfo['price'] = $price;
+            };
+            if(!empty($mianji)) {
+                $clientInfo['mianji'] = $mianji;
+            };
+            if(!empty($huxing)) {
+              $clientInfo['huxing'] = $huxing;
+            };
+            if(!empty($house_floor)) {
+                $clientInfo['house_floor'] = $house_floor;
+            };
+            if(!empty($buy_for)) {
+              $clientInfo['buy_for'] = $buy_for;
+            };
+            if(!empty($beizhu)) {
+              $clientInfo['beizhu'] = $beizhu;
+            };
+            if(!empty($loupan_type)) {
+                $clientInfo['loupan_type'] = $loupan_type;
+            };
+            if(!empty($name)) {
+              $clientInfo['name'] = $name;
+            };
+            if(!empty($phone)) {
+              $clientInfo['phone'] = $phone;
+            };
+
+            //客户添加日期
+            $clientInfo['date'] = date("Y-m-d");
+
+            //插入数据
+            $newDate =  Db::name('client')->insert($clientInfo);
+            $userId = Db::name('client')->getLastInsID();
+
+            //添加用户记录
+            if( !empty($newDate)) {
+                $houseId = Db::name('client')->getLastInsID();
+                if(!empty($beizhu)) {
+                    $des = $beizhu;
+                }else {
+                    $des = '开始跟进';
+                };
+
+                $status = [];
+                $status['house_id'] = $houseId;
+                $status['user_id'] = $user_id;
+                $status['step'] = 1;
+                $status['description'] = $des;
+                $status['date'] = date("Y-m-d");
+                Db::name('house_status')->insert($status);
+            };
+
+            $res=Array('code'=>200,
+                'success' => true,
+                'msg'=>'添加客户成功',
+                'data'=>$newDate
+            );
+        };
+        return json($res);
+    }
  }
 
 ?>
