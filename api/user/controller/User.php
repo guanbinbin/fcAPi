@@ -300,5 +300,177 @@ class User extends Controller{
 
         return json($res);
     }
+
+    // 更新用户信息
+    public function update(){
+        $request = Request::instance();
+
+        $user_id = $request->param('user_id');
+        $name = $request->param('name');
+        $pwd= $request->param('pwd');
+        $type = $request->param('type');
+        $phone = $request->param('phone');
+        $qq = $request->param('qq');
+
+        if(empty($user_id)) {
+            $res=Array('code'=>-1,
+                'success' => false,
+                'msg'=>'更新用户失败,没找到用户编号！',
+                'data'=>0
+            );
+        }else {
+          if(!empty($user_id)) {
+            $updataParams['user_id'] = $user_id;
+          };
+          if(!empty($name)) {
+            $updataParams['name'] = $name;
+          };
+          if(!empty($pwd)) {
+            $updataParams['pwd'] = $pwd;
+          };
+          if(!empty($type)) {
+            $updataParams['type'] = $type;
+          };
+          if(!empty($phone)) {
+            $updataParams['phone'] = $phone; 
+          };
+          if(!empty($qq)) {
+            $updataParams['qq'] = $qq;   
+          };
+
+          // 修改的日期
+          $updataParams['date'] = date("Y-m-d");  
+
+          //返回更新的数据
+          $updateInfo = Db::name('user')->update($updataParams);
+          if(!empty($updateInfo)){
+            $res=Array('code'=>200,
+                'success' => true,
+                'msg'=>'更新用户成功！',
+                'data'=>$updataParams);
+          }else {
+            $res=Array('code'=>0,
+                'success' => false,
+                'msg'=>'更新用户失败！',
+                'data'=>0
+            );
+          };
+        };
+        return json($res);
+    }
+
+    //删除用户
+    public function delete(){
+        $request = Request::instance();
+        $user_id = $request->param('user_id');
+        
+        if(empty($user_id)){
+            $res=Array('code'=>-1,
+                'success' => false,
+                'msg'=>'删除失败,没找到用户编号！',
+                'data'=>0
+            );
+        }else {
+          $number = Db::name('user')->delete($user_id);
+          $res=Array('code'=>200,
+                'success' => true,
+                'msg'=>'删除成功！',
+                'data'=>$user_id);
+        };
+        return json($res);
+    }
+
+    //搜索
+    public function search(){
+        $request = Request::instance();
+        $keywords = $request->param('keywords');
+        $type = $request->param('type');
+
+        $userParams = [];
+        if(!empty($keywords)) {
+            if(is_numeric($keywords)){
+                $userParams['user_id|phone|qq'] = ['like','%'.$keywords.'%'];
+                // $userParams['phone'] = ['like','%'.$keywords.'%'];
+                // $userParams['qq'] = ['like','%'.$keywords.'%'];
+            }else {
+                $userParams['name'] = ['like','%'.$keywords.'%'];
+            };
+            if(!empty($type)){
+              $userParams['type'] = $type;
+            };
+            $list = Db::name('user')->where($userParams)->select();
+         }else if( empty($keywords) && !empty($type)){ 
+            $userParams['type'] = $type;
+            $list = Db::name('user')->where($userParams)->select();
+         }else{
+            $list = Db::name('user')->select();
+         };
+         
+        
+        if(isset($list) && count($list)){
+            $res=Array('code'=>200,
+                'success' => true,
+                'msg'=>'获取到用户列表',
+                'data'=>$list
+            );
+        }else {
+            $res=Array('code'=>-1,
+                'success' => true,
+                'msg'=>'用户为空',
+                'data'=>0
+            );
+        }
+
+        return json($res);
+    }
 }
+
+
+
+
+
+    /*
+    * 查询用户
+    * params
+    * user_id: int
+    * type: default is null or 0
+    * keywords: default is ''
+    * pageIndex: default is null or 0 
+    * pageSize: default is 20 
+    */ 
+    // public function query(){
+    //    $request = Request::instance();
+    //    $user_id = $request->param('user_id'); 
+
+    //    if( !empty($user_id) ){
+    //      $data = Db::name('user')->where('user_id',$user_id)->select();
+    //      if(empty($data)) {
+    //         $res=Array('code'=>0,
+    //             'success' => false,
+    //             'msg'=>'没有查询到指定用户！',
+    //             'data'=>0);
+    //      }else {
+    //         $res=Array('code'=>200,
+    //             'success' => true,
+    //             'msg'=>'查询到指定用户！',
+    //             'data'=>$data);
+    //      };
+    //    }else {
+    //      $userParams = [];
+    //      $keywords = $request->param('keywords'); 
+    //      $type = $request->param('type');
+    //      if(!empty($keywords) && !empty( $type )) {
+    //         $userParams['user_id'] = ['like','%'.$keywords.'%'];
+    //         $userParams['name'] = ['like','%'.$keywords.'%'];
+    //         $userParams['phone'] = ['like','%'.$keywords.'%'];
+    //         $userParams['qq'] = ['like','%'.$keywords.'%'];
+    //         $userParams['type'] = $type;
+    //      };
+
+
+
+    //    };
+    //    return json($res);
+    // }
+
 
