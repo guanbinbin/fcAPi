@@ -242,6 +242,54 @@ header('Access-Control-Allow-Headers: content-type');
         };
         return json($res);
     }
+
+    public function getOneClient(){
+        $request = Request::instance();
+        $house_id =  $request->param('client_id');
+
+        $data = Db::name('client')->where('client_id',$house_id)->select();
+
+        if(isset($data)){
+            $res=Array('code'=>200,
+                'success' => true,
+                'msg'=>'获取到指定客户',
+                'data'=>$data
+            );
+        }else {
+            $res=Array('code'=>0,
+                'success' => false,
+                'msg'=>'客户为空',
+                'data'=>0
+            );
+        }
+        return json($res);
+    }
+
+    public function getBase(){
+        $request = Request::instance();
+        $list = Db::name('house_base')->select();
+        if(isset($list)){
+            if(count($list)){
+                $res=Array('code'=>200,
+                'success' => true,
+                'msg'=>'获取到用户列表',
+                'data'=>$list);
+            }else {
+                $res=Array('code'=>1,
+                'success' => true,
+                'msg'=>'用户为空',
+                'data'=>$list);
+            }
+        }else {
+            $res=Array('code'=>-1,
+                'success' => true,
+                'msg'=>'参数错误',
+                'data'=>0
+            );
+        }
+        return json($res);
+    }
+    
  }
 
 ?>
