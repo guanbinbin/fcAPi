@@ -16,7 +16,7 @@ header('Access-Control-Allow-Headers: content-type');
         $house_name = $request->param('house_name');
         $house_developer =  $request->param('house_developer');
         $house_position =  $request->param('house_position');
-        $house_sbuway_line=  $request->param('house_sbuway_line');
+        $house_subway_line=  $request->param('house_subway_line');
         $deliver_time= $request->param('deliver_time');
         $house_manage_company =  $request->param('house_manage_company');
         $house_fee = $request->param('house_fee');
@@ -60,7 +60,7 @@ header('Access-Control-Allow-Headers: content-type');
         }else {
             $baseInfo = [];
             if(!empty($house_name)) {
-                $baseInfo['$house_name'] = $house_name;
+                $baseInfo['house_name'] = $house_name;
             };
             if(!empty($house_developer)) {
               $baseInfo['house_developer'] = $house_developer;
@@ -105,7 +105,7 @@ header('Access-Control-Allow-Headers: content-type');
               $baseInfo['house_oritation'] = $house_oritation;
             };
             if(!empty($building_number)) {
-                $baseInfo['$building_number'] = $building_number;
+                $baseInfo['building_number'] = $building_number;
             };
             if(!empty($saleing_buildingnumber_floornumber)) {
               $baseInfo['saleing_buildingnumber_floornumber'] = $saleing_buildingnumber_floornumber;
@@ -149,9 +149,6 @@ header('Access-Control-Allow-Headers: content-type');
             if(!empty($open_time)) {
               $baseInfo['open_time'] = $open_time;
             };
-
-
-
             if(!empty($next_open_time)) {
               $baseInfo['next_open_time'] = $next_open_time;
             };
@@ -175,7 +172,7 @@ header('Access-Control-Allow-Headers: content-type');
             };
             
             //客户添加日期
-            $baseInfo['date'] = date("Y-m-d");
+            $baseInfo['add_date'] = date("Y-m-d");
             //插入数据
             $newDate =  Db::name('house_base')->insert($baseInfo);
 
@@ -251,11 +248,13 @@ header('Access-Control-Allow-Headers: content-type');
             if(count($list)){
                 $res=Array('code'=>200,
                 'success' => true,
+                'total'=> count($list),
                 'msg'=>'获取到用户列表',
                 'data'=>$list);
             }else {
                 $res=Array('code'=>1,
                 'success' => true,
+                'total'=> count($list),
                 'msg'=>'用户为空',
                 'data'=>$list);
             }
