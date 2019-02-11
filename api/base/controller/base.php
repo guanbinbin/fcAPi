@@ -270,7 +270,7 @@ header('Access-Control-Allow-Headers: content-type');
  	}
 
     /*
-    *   @params house_id 
+    * @params house_id 
     */ 
     public function deleteBase(){
         $request = Request::instance();
@@ -489,9 +489,7 @@ header('Access-Control-Allow-Headers: content-type');
             );
         };
         return json($res);
-
     }
-
  }
 
 ?>

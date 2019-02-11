@@ -13,7 +13,7 @@ header('Access-Control-Allow-Headers: content-type');
  	* 获取用户列表
  	*/ 
  	public function getClientList(){
- 		$data=Db::name('client')->select();
+ 		$data=Db::name('client')->limit(1,10)->select();
 
         //处理客户归属人
         $list = [];
