@@ -120,10 +120,6 @@ header('Access-Control-Allow-Headers: content-type');
     */ 
     public function getArea(){
         $data=Db::name('area')->select();
-
-        $request = Request::instance();
-
-
         if(isset($data) && count($data)){
             $res=Array('code'=>200,
                 'success' => true,
@@ -134,6 +130,33 @@ header('Access-Control-Allow-Headers: content-type');
             $res=Array('code'=>-1,
                 'success' => true,
                 'msg'=>'用户为空',
+                'data'=>0
+            );
+        }
+        return json($res);
+    }
+
+    public function getLog(){
+        $request = Request::instance();
+
+        $house_id = $request->param('house_id');
+        
+        if(!empty($house_id)) {
+            $data=Db::name('house_status')->where('house_id',$house_id)->select();
+        }else {
+            $data = 0 ;
+        };
+        
+        if(isset($data)){
+            $res=Array('code'=>200,
+                'success' => true,
+                'msg'=>'获取到客户记录信息',
+                'data'=>$data
+            );
+        }else {
+            $res=Array('code'=>0,
+                'success' => true,
+                'msg'=>'用户记录为空',
                 'data'=>0
             );
         }
@@ -247,8 +270,7 @@ header('Access-Control-Allow-Headers: content-type');
         $request = Request::instance();
         $house_id =  $request->param('client_id');
 
-        $data = Db::name('client')->where('client_id',$house_id)->select();
-
+        $data = Db::name('client')->find($house_id);
         if(isset($data)){
             $res=Array('code'=>200,
                 'success' => true,
