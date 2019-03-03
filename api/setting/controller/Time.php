@@ -29,6 +29,23 @@ header('Access-Control-Allow-Headers: content-type');
         return json($res);
     }
 
+    public function updateTime(){
+        $request = Request::instance();
+        $active_time =  $request->param('active_time');
+
+        $data = Db::name('active_time')->update(['active_time' => $active_time,'time_id'=>1]);
+        if(!empty($data)){
+            $res = array('code'=>200,
+                'success'=>true,
+                'msg'=>'时间修改成功');
+        }else {
+            $res = array('code'=>0,
+                'success'=>false,
+                'msg'=>'时间修改失败');
+        }
+        return json($res);
+    }
+
  }
 
 ?>

@@ -258,6 +258,7 @@ class User extends Controller{
         return json($data);
     }
 
+    // 饼状图
     public function getCircleUsers(){
         $request = Request::instance();
         $users = Db::name('user')->select();
@@ -299,6 +300,53 @@ class User extends Controller{
         }
 
         return json($res);
+    }
+
+    //折线图
+    public function getLineUsers(){
+        $request = Request::instance();
+        $users = Db::name('user')->select();
+
+        $currentYear = [];
+        $data = [];
+        for($i=1;$i<=12;$i++) {
+            if($i < 10){
+                $month = '0'.$i;
+            }else {
+                $month = $i;
+            }
+           array_push($currentYear,date("Y").'-'.$month);
+        };
+        for($k=0; $k<12; $k++){
+
+            for($m=0; $m<count($users); $m++){
+                if($currentYear[$k] == substr($users[$m]['date'],0,7)  ){
+                    array_push($data,array($users[$m]) );
+                }
+            }
+        };
+
+
+        // for($m=0; $m<count($users); $m++){
+        //     array_push($data,substr($users[$m]['date'],0,7));
+        // }
+
+
+
+        // if(isset($data) && count($data)){
+        //     $res=Array('code'=>200,
+        //         'success' => true,
+        //         'msg'=>'获取到用户列表',
+        //         'data'=>$data
+        //     );
+        // }else {
+        //     $res=Array('code'=>-1,
+        //         'success' => true,
+        //         'msg'=>'用户为空',
+        //         'data'=>0
+        //     );
+        // };
+        return json($data);
     }
 
     // 更新用户信息
