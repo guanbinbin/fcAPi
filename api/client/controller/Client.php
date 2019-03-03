@@ -311,6 +311,106 @@ header('Access-Control-Allow-Headers: content-type');
         }
         return json($res);
     }
+
+    public function updateClient(){
+        $request = Request::instance();
+
+        $client_id = $request->param('client_id');
+        $user_id = $request->param('user_id');
+        $name = $request->param('name');
+        $phone = $request->param('phone');
+        $mail = $request->param('mail');
+        $other_contact = $request->param('other_contact');
+        $address = $request->param('address');
+        $loupan = $request->param('loupan');
+        $price = $request->param('price');
+        $mianji = $request->param('mianji');
+        $huxing = $request->param('huxing');
+        $house_floor = $request->param('house_floor');
+        $buy_for = $request->param('buy_for');
+        $beizhu = $request->param('beizhu');
+        $loupan_type = $request->param('loupan_type');
+        $date = date("Y-m-d");
+    
+
+        if(empty($name)) {
+            $res=Array('code'=>0,
+                'success' => 0,
+                'msg'=>'请填写楼盘名称',
+                'data'=>0
+            );
+        }else {
+            $baseInfo = [];
+            $id = '';
+            if(!empty($name)) {
+                $baseInfo['name'] = $name;
+            };
+            if(!empty($client_id)) {
+                // $id  = $client_id;
+                $baseInfo['client_id'] = $client_id;
+            };
+            if(!empty($user_id)) {
+                // $id  = $client_id;
+                $baseInfo['user_id'] = $user_id;
+            };
+            if(!empty($phone)) {
+              $baseInfo['phone'] = $phone;
+            };
+            if(!empty($mail)) {
+                $baseInfo['mail'] = $mail;
+            };
+            if(!empty($other_contact)) {
+              $baseInfo['other_contact'] = $other_contact;
+            };
+            if(!empty($address)) {
+                $baseInfo['address'] = $address;
+            };
+            if(!empty($loupan)) {
+              $baseInfo['loupan'] = $loupan;
+            };
+            if(!empty($price)) {
+                $baseInfo['price'] = $price;
+            };
+            if(!empty($mianji)) {
+              $baseInfo['mianji'] = $mianji;
+            };
+            if(!empty($huxing)) {
+              $baseInfo['huxing'] = $huxing;
+            };
+            if(!empty($house_floor)) {
+                $baseInfo['house_floor'] = $house_floor;
+            };
+            if(!empty($loupan_type)) {
+                $baseInfo['loupan_type'] = $loupan_type;
+            };
+            if(!empty($buy_for)) {
+              $baseInfo['buy_for'] = $buy_for;
+            };
+            if(!empty($beizhu)) {
+              $baseInfo['beizhu'] = $beizhu;
+
+              //添加记录
+              $count = count(Db::name('house_status')->where('house_id',$client_id)->select());
+              $count += 1;
+
+              $newLog = ['house_id' => $client_id, 'user_id' => $user_id,'step'=>$count,'description'=>$beizhu,'date'=>$date];
+              Db::name('house_status')->insert($newLog);
+            };
+            
+            
+            
+            //客户更新日期
+            $baseInfo['date'] = $date;
+            $res = Db::name('client')->update($baseInfo);
+
+            $res=Array('code'=>200,
+                'success' => true,
+                'msg'=>'楼盘库修改成功',
+                'data'=>$baseInfo
+            );
+        };
+        return json($baseInfo);
+    }
     
  }
 
