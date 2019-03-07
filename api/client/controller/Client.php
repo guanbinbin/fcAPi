@@ -180,6 +180,8 @@ header('Access-Control-Allow-Headers: content-type');
         $buy_for=  $request->param('buy_for');
         $beizhu = $request->param('beizhu');
         $loupan_type =  $request->param('loupan_type');
+        $look_condition =  $request->param('look_condition');
+        $client_path =  $request->param('client_path');
 
         if(empty($name) || empty($phone)) {
             $res=Array('code'=>0,
@@ -230,6 +232,12 @@ header('Access-Control-Allow-Headers: content-type');
             };
             if(!empty($phone)) {
               $clientInfo['phone'] = $phone;
+            };
+            if(!empty($look_condition)) {
+              $clientInfo['look_condition'] = $look_condition;
+            };
+            if(!empty($client_path)) {
+              $clientInfo['client_path'] = $client_path;
             };
 
             //客户添加日期
@@ -330,6 +338,8 @@ header('Access-Control-Allow-Headers: content-type');
         $buy_for = $request->param('buy_for');
         $beizhu = $request->param('beizhu');
         $loupan_type = $request->param('loupan_type');
+        $look_condition = $request->param('look_condition');
+        $client_path = $request->param('client_path');
         $date = date("Y-m-d");
     
 
@@ -382,6 +392,12 @@ header('Access-Control-Allow-Headers: content-type');
             };
             if(!empty($loupan_type)) {
                 $baseInfo['loupan_type'] = $loupan_type;
+            };
+            if(!empty($look_condition)) {
+                $baseInfo['look_condition'] = $look_condition;
+            };
+            if(!empty($client_path)) {
+                $baseInfo['client_path'] = $client_path;
             };
             if(!empty($buy_for)) {
               $baseInfo['buy_for'] = $buy_for;
